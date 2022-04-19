@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" ${POSTGRES_DB}<<-EOSQL
+    CREATE SCHEMA IF NOT EXISTS ${POSTGRES_SCHEMA} AUTHORIZATION "${POSTGRES_USER}";
+
+    ALTER database "${POSTGRES_DB}" SET search_path TO ${POSTGRES_SCHEMA};
+EOSQL
+
