@@ -147,7 +147,7 @@ class ProductionConfig(Config):
     DEBUG = False
     # Get Parameters and Credentials from VAULT
     module_parameters = client.secrets.kv.v1.read_secret(
-        path="module/parameters/testModule1",
+        path=os.getenv('KV_PATH'),
         mount_point="kv")["data"]
     database_info = client.read(module_parameters["database_credentials_path"])
     db_credentials_expiry_time = datetime.now() + timedelta(seconds=database_info["lease_duration"])
