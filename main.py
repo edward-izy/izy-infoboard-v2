@@ -29,7 +29,7 @@ def init_db():
 @app.before_request
 def update_db():
 
-    if config.config_by_name[os.getenv('FLASK_CONFIG')].db_credentials_expiry_time < datetime.now()
+    if config.config_by_name[os.getenv('FLASK_CONFIG')].db_credentials_expiry_time < datetime.now():
         while True:
             try:
                 print('Getting new credentials....')
