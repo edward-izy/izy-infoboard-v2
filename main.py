@@ -28,21 +28,28 @@ def init_db():
 
 @app.before_request
 def update_db():
-    if config.config_by_name[os.getenv('FLASK_CONFIG')].db_credentials_expiry_time < datetime.now():
-        print('Getting new credentials....')
-        info = config.client.read(config.config_by_name[os.getenv('FLASK_CONFIG')].module_parameters['database_credentials_path'])
-        data = info['data']
-        print('Updating variables...')
-        config.config_by_name[os.getenv('FLASK_CONFIG')].db_credentials_expiry_time = datetime.now() + timedelta(seconds=info['lease_duration'])
-        config.config_by_name[os.getenv('FLASK_CONFIG')].DB_USERNAME = data['username']
-        config.config_by_name[os.getenv('FLASK_CONFIG')].DB_PASSWORD = data['password']
-        print('Creating new connection!')
-        current_session.close()
-        flask_scoped_session(sessionmaker(bind=create_engine(f"{config.config_by_name[os.getenv('FLASK_CONFIG')].DB_DIALECT}://{config.config_by_name[os.getenv('FLASK_CONFIG')].DB_USERNAME}:{config.config_by_name[os.getenv('FLASK_CONFIG')].DB_PASSWORD}@{config.config_by_name[os.getenv('FLASK_CONFIG')].DB_HOST}:{config.config_by_name[os.getenv('FLASK_CONFIG')].DB_PORT}/{config.config_by_name[os.getenv('FLASK_CONFIG')].DB_NAME}", pool_size=5), autocommit=False, autoflush=False), app)
+
+    if config.config_by_name[os.getenv('FLASK_CONFIG')].db_credentials_expiry_time < datetime.now()
+        while True:
+            try:
+                print('Getting new credentials....')
+                info = config.client.read(config.config_by_name[os.getenv('FLASK_CONFIG')].module_parameters['database_credentials_path'])
+                data = info['data']
+                print('Updating variables...')
+                config.config_by_name[os.getenv('FLASK_CONFIG')].db_credentials_expiry_time = datetime.now() + timedelta(seconds=info['lease_duration'])
+                config.config_by_name[os.getenv('FLASK_CONFIG')].DB_USERNAME = data['username']
+                config.config_by_name[os.getenv('FLASK_CONFIG')].DB_PASSWORD = data['password']
+                print('Creating new connection!')
+                current_session.close()
+                flask_scoped_session(sessionmaker(bind=create_engine(f"{config.config_by_name[os.getenv('FLASK_CONFIG')].DB_DIALECT}://{config.config_by_name[os.getenv('FLASK_CONFIG')].DB_USERNAME}:{config.config_by_name[os.getenv('FLASK_CONFIG')].DB_PASSWORD}@{config.config_by_name[os.getenv('FLASK_CONFIG')].DB_HOST}:{config.config_by_name[os.getenv('FLASK_CONFIG')].DB_PORT}/{config.config_by_name[os.getenv('FLASK_CONFIG')].DB_NAME}", pool_size=5), autocommit=False, autoflush=False), app)
+            except:
+                config.client = config.get_client(config.get_token())
+                continue
+            break
+
     else:
         print("Experation time:", config.config_by_name["development"].db_credentials_expiry_time)
         print("Credentials valid!")
-
 
 @app.shell_context_processor
 def make_shell_context():
