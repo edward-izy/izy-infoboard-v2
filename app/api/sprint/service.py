@@ -1,7 +1,9 @@
 from app.models.sprint import Sprint
 from app.utils import err_resp, message, internal_err_resp
 from flask_sqlalchemy_session import  current_session
+from .dto import SprintDto
 
+logger = SprintDto.api.logger
 
 def get_all():
     """ Get user data by username """
@@ -12,11 +14,11 @@ def get_all():
         for sprint in sprints:
             new = {
                 "spint": sprint.sprint,
-                "development_start": sprint.development_start,
-                "development_end": sprint.development_end,
-                "test_start": sprint.test_start,
-                "test_end": sprint.test_end,
-                "production_date": sprint.production_date,
+                "development_start": str(sprint.development_start),
+                "development_end": str(sprint.development_end),
+                "test_start": str(sprint.test_start),
+                "test_end": str(sprint.test_end),
+                "production_date": str(sprint.production_date),
                 "state": sprint.state
             }
             res.append(new)
@@ -43,11 +45,11 @@ def post_sprint(sprint):
 
         new = {
             "spint": sprint.sprint,
-            "development_start": sprint.development_start,
-            "development_end": sprint.development_end,
-            "test_start": sprint.test_start,
-            "test_end": sprint.test_end,
-            "production_date": sprint.production_date,
+            "development_start": str(sprint.development_start),
+            "development_end": str(sprint.development_end),
+            "test_start": str(sprint.test_start),
+            "test_end": str(sprint.test_end),
+            "production_date": str(sprint.production_date),
             "state": sprint.state
         }
         return new
@@ -61,11 +63,11 @@ def get_by_sprint(sprint):
         sprint = current_session.query(Sprint).filter_by(sprint=sprint).first()
         new = {
             "spint": sprint.sprint,
-            "development_start": sprint.development_start,
-            "development_end": sprint.development_end,
-            "test_start": sprint.test_start,
-            "test_end": sprint.test_end,
-            "production_date": sprint.production_date,
+            "development_start": str(sprint.development_start),
+            "development_end": str(sprint.development_end),
+            "test_start": str(sprint.test_start),
+            "test_end": str(sprint.test_end),
+            "production_date": str(sprint.production_date),
             "state": sprint.state
         }
         return new
@@ -77,6 +79,7 @@ def get_by_sprint(sprint):
 def update_sprint(sprint):
     try:
         prev = current_session.query(Sprint).filter_by(sprint=sprint['sprint']).first()
+        logger.info(prev)
         prev.sprint = sprint["sprint"]
         prev.development_start = sprint["development_start"]
         prev.development_end = sprint["development_end"]
@@ -90,16 +93,18 @@ def update_sprint(sprint):
 
         new = {
             "spint": prev.sprint,
-            "development_start": prev.development_start,
-            "development_end": prev.development_end,
-            "test_start": prev.test_start,
-            "test_end": prev.test_end,
-            "production_date": prev.production_date,
+            "development_start": str(prev.development_start),
+            "development_end": str(prev.development_end),
+            "test_start": str(prev.test_start),
+            "test_end": str(prev.test_end),
+            "production_date": str(prev.production_date),
             "state": prev.state
         }
+        logger.info(new)
         return new
 
     except Exception as e:
+        logger.error(e)
         return e
 
 
@@ -111,11 +116,11 @@ def delete_sprint(sprint):
         current_session.commit()
         new = {
             "spint": sprint.sprint,
-            "development_start": sprint.development_start,
-            "development_end": sprint.development_end,
-            "test_start": sprint.test_start,
-            "test_end": sprint.test_end,
-            "production_date": sprint.production_date,
+            "development_start": str(sprint.development_start),
+            "development_end": str(sprint.development_end),
+            "test_start": str(sprint.test_start),
+            "test_end": str(sprint.test_end),
+            "production_date": str(sprint.production_date),
             "state": sprint.state
         }
         return new

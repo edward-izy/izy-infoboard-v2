@@ -1,5 +1,9 @@
 from app.models.news import News
 from flask_sqlalchemy_session import current_session
+from .dto import NewsDto
+
+
+logger = NewsDto.api.logger
 
 
 def get_all():
@@ -46,6 +50,7 @@ def post_news(news):
         return res
 
     except Exception as e:
+        logger.error(e)
         return {"message": "error"}, 410
 
 

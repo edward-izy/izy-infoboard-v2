@@ -67,13 +67,16 @@ def get_by_id(id):
 
 def get_by_sprint(sprint):
     try:
-        sfa = current_session.query(SprintFocusArea).filter_by(sprint=sprint).all()
-        res = {
-            "id": sfa.id,
-            "sprint": sfa.sprint,
-            "title": sfa.title,
-            "description": sfa.description
-        }
+        sfas = current_session.query(SprintFocusArea).filter_by(sprint=sprint).all()
+        res = []
+        for sfa in sfas:
+            res_sfa = {
+                "id": sfa.id,
+                "sprint": sfa.sprint,
+                "title": sfa.title,
+                "description": sfa.description
+            }
+            res.append(res_sfa)
         return res
 
     except Exception as e:

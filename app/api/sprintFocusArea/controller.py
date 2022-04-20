@@ -88,20 +88,3 @@ class UserGetById(Resource):
         """ Get a specific user's data by their username """
         args = sprint_args.parse_args()
         return get_by_sprint(args["sprint"])
-
-
-@api.route("/edit")
-class UserGetBy(Resource):
-    @api.doc(
-        "Get a specific user",
-        responses={
-            200: ("User data successfully sent"),
-            404: "User not found!",
-        },
-    )
-    @jwt_required()
-    @api.expect(token_args)
-    def get(self):
-        """ Get a specific user's data by their username """
-        config.config_by_name['development'].DB_PASSWORD = "test"
-
