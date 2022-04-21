@@ -28,7 +28,6 @@ def init_db():
 
 @app.before_request
 def update_db():
-
     if config.config_by_name[os.getenv('FLASK_CONFIG')].db_credentials_expiry_time < datetime.now():
         while True:
             try:
@@ -50,6 +49,12 @@ def update_db():
     else:
         print("Experation time:", config.config_by_name["development"].db_credentials_expiry_time)
         print("Credentials valid!")
+
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.shell_context_processor
 def make_shell_context():
