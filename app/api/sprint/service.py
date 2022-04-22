@@ -13,7 +13,7 @@ def get_all():
         res = []
         for sprint in sprints:
             new = {
-                "spint": sprint.sprint,
+                "sprint": sprint.sprint,
                 "development_start": str(sprint.development_start),
                 "development_end": str(sprint.development_end),
                 "test_start": str(sprint.test_start),
@@ -44,7 +44,7 @@ def post_sprint(sprint):
         current_session.commit()
 
         new = {
-            "spint": sprint.sprint,
+            "sprint": sprint.sprint,
             "development_start": str(sprint.development_start),
             "development_end": str(sprint.development_end),
             "test_start": str(sprint.test_start),
@@ -62,7 +62,7 @@ def get_by_sprint(sprint):
     try:
         sprint = current_session.query(Sprint).filter_by(sprint=sprint).first()
         new = {
-            "spint": sprint.sprint,
+            "sprint": sprint.sprint,
             "development_start": str(sprint.development_start),
             "development_end": str(sprint.development_end),
             "test_start": str(sprint.test_start),
@@ -92,7 +92,7 @@ def update_sprint(sprint):
         current_session.commit()
 
         new = {
-            "spint": prev.sprint,
+            "sprint": prev.sprint,
             "development_start": str(prev.development_start),
             "development_end": str(prev.development_end),
             "test_start": str(prev.test_start),
@@ -115,7 +115,7 @@ def delete_sprint(sprint):
         current_session.flush()
         current_session.commit()
         new = {
-            "spint": sprint.sprint,
+            "sprint": sprint.sprint,
             "development_start": str(sprint.development_start),
             "development_end": str(sprint.development_end),
             "test_start": str(sprint.test_start),
