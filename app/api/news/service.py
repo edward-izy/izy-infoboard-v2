@@ -68,6 +68,7 @@ def get_by_id(id):
         return res
 
     except Exception as e:
+        logger.exception(e)
         return {"News not found"}, 401
 
 
