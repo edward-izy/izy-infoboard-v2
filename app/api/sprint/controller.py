@@ -44,7 +44,7 @@ class SprintGet(Resource):
 @api.route("/by-sprint")
 class SprintGetById(Resource):
     @api.doc(
-        "Get a specific user",
+        "Get a specific user2",
         responses={
             200: ("User data successfully sent"),
             404: "User not found!",
