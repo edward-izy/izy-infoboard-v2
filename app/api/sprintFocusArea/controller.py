@@ -22,9 +22,9 @@ sprint_args.add_argument("sprint", type=str, required=True)
 
 
 @api.route("/")
-class UserGet(Resource):
+class SFA(Resource):
     @api.doc(
-        "Get a specific user",
+        "Dummy",
         responses={
             200: ("User data successfully sent"),
             404: "User not found!",
@@ -33,26 +33,26 @@ class UserGet(Resource):
     @jwt_required()
     @api.expect(token_args)
     def get(self):
-        """ Get a specific user's data by their username """
+        """ GET all SFA's """
         return get_all()
 
     @jwt_required()
     @api.expect(token_args, SprintFocusAreaDto.post_sfa)
     def post(self):
-        """ Get a specific user's data by their username """
+        """ Create SFA """
         return post_sfa(api.payload)
 
     @jwt_required()
     @api.expect(token_args, SprintFocusAreaDto.update_sfa)
     def put(self):
-        """ Get a specific user's data by their username """
+        """ Update SFA """
         return update_sfa(api.payload)
 
 
 @api.route("/by-id")
-class UserGetById(Resource):
+class SFAByID(Resource):
     @api.doc(
-        "Get a specific user",
+        "Dummy2",
         responses={
             200: ("User data successfully sent"),
             404: "User not found!",
@@ -61,22 +61,22 @@ class UserGetById(Resource):
     @jwt_required()
     @api.expect(token_args, id_args)
     def get(self):
-        """ Get a specific user's data by their username """
+        """ Get SFA by ID """
         args = id_args.parse_args()
         return get_by_id(args["id"])
 
     @jwt_required()
     @api.expect(token_args, id_args)
     def delete(self):
-        """ Get a specific user's data by their username """
+        """ Delete SFA by ID """
         args = id_args.parse_args()
         return delete_sfa(args["id"])
 
 
 @api.route("/by-sprint")
-class UserGetById(Resource):
+class SFABySprintID(Resource):
     @api.doc(
-        "Get a specific user",
+        "Dummy3",
         responses={
             200: ("User data successfully sent"),
             404: "User not found!",
@@ -85,6 +85,6 @@ class UserGetById(Resource):
     @jwt_required()
     @api.expect(token_args, sprint_args)
     def get(self):
-        """ Get a specific user's data by their username """
+        """ Get SFA by sprint """
         args = sprint_args.parse_args()
         return get_by_sprint(args["sprint"])

@@ -2,11 +2,12 @@ from app.models.sprint import Sprint
 from app.utils import err_resp, message, internal_err_resp
 from flask_sqlalchemy_session import  current_session
 from .dto import SprintDto
+from sqlalchemy.exc import NoResultFound
 
 logger = SprintDto.api.logger
 
 def get_all():
-    """ Get user data by username """
+    """ Get all sprints """
     try:
         sprints = current_session.query(Sprint).all()
 
@@ -24,8 +25,19 @@ def get_all():
             res.append(new)
         return res
 
+
+    except NoResultFound as e:
+
+        logger.exception(e)
+
+        return {'error': 'news not found'}, 400
+
+
     except Exception as e:
-        return e
+
+        logger.exception(e)
+
+        return {'error': 'unknown'}, 400
 
 
 def post_sprint(sprint):
@@ -54,8 +66,19 @@ def post_sprint(sprint):
         }
         return new
 
+
+    except NoResultFound as e:
+
+        logger.exception(e)
+
+        return {'error': 'news not found'}, 400
+
+
     except Exception as e:
-        return e
+
+        logger.exception(e)
+
+        return {'error': 'unknown'}, 400
 
 
 def get_by_sprint(sprint):
@@ -72,8 +95,19 @@ def get_by_sprint(sprint):
         }
         return new
 
+
+    except NoResultFound as e:
+
+        logger.exception(e)
+
+        return {'error': 'news not found'}, 400
+
+
     except Exception as e:
-        return e
+
+        logger.exception(e)
+
+        return {'error': 'unknown'}, 400
 
 
 def update_sprint(sprint):
@@ -103,9 +137,19 @@ def update_sprint(sprint):
         logger.info(new)
         return new
 
+
+    except NoResultFound as e:
+
+        logger.exception(e)
+
+        return {'error': 'news not found'}, 400
+
+
     except Exception as e:
-        logger.error(e)
-        return e
+
+        logger.exception(e)
+
+        return {'error': 'unknown'}, 400
 
 
 def delete_sprint(sprint):
@@ -125,5 +169,16 @@ def delete_sprint(sprint):
         }
         return new
 
+
+    except NoResultFound as e:
+
+        logger.exception(e)
+
+        return {'error': 'news not found'}, 400
+
+
     except Exception as e:
-        return e
+
+        logger.exception(e)
+
+        return {'error': 'unknown'}, 400

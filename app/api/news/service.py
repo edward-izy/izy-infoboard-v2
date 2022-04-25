@@ -1,5 +1,6 @@
 from app.models.news import News
 from flask_sqlalchemy_session import current_session
+from sqlalchemy.exc import NoResultFound
 from .dto import NewsDto
 
 
@@ -54,10 +55,10 @@ def post_news(news):
         return {"message": "error"}, 410
 
 
-def get_by_id(id):
+def get_by_id(news_id):
     """ Get news by id """
     try:
-        news = current_session.query(News).filter_by(id=id).first()
+        news = current_session.query(News).filter_by(id=news_id).one()
         res = {
             'id': news.id,
             'title': news.title,
@@ -67,15 +68,19 @@ def get_by_id(id):
         }
         return res
 
+    except NoResultFound as e:
+        logger.exception(e)
+        return {'error': 'No news with this ID found'}, 400
+
     except Exception as e:
         logger.exception(e)
-        return {"News not found"}, 401
+        return {'error': 'unknown'}, 400
 
 
 def update_news(news):
     """ update news by id """
     try:
-        prev = current_session.query(News).filter_by(id=news['id']).first()
+        prev = current_session.query(News).filter_by(id=news['id']).one()
         prev.id = news["id"]
         prev.title = news["title"]
         prev.description = news["description"]
@@ -93,14 +98,19 @@ def update_news(news):
         }
         return res
 
+    except NoResultFound as e:
+        logger.exception(e)
+        return {'error': 'news not found'}, 400
+
     except Exception as e:
-        return e
+        logger.exception(e)
+        return {'error': 'unknown'}, 400
 
 
 def delete_news(id):
     """ delete news by id """
     try:
-        news = current_session.query(News).filter_by(id=id).first()
+        news = current_session.query(News).filter_by(id=id).one()
         current_session.delete(news)
         current_session.flush()
         current_session.commit()
@@ -113,7 +123,12 @@ def delete_news(id):
         }
         return res
 
+    except NoResultFound as e:
+        logger.exception(e)
+        return {'error': 'news not found'}, 400
+
     except Exception as e:
-        return e
+        logger.exception(e)
+        return {'error': 'unknown'}, 400
 
 
