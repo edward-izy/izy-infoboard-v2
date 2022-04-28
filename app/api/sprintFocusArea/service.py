@@ -1,13 +1,15 @@
 from flask import current_app
 from flask_sqlalchemy_session import  current_session
 from app import db
+from sqlalchemy.exc import NoResultFound
 from app.models.sprintfocusarea import SprintFocusArea
 from app.utils import err_resp, message, internal_err_resp
 from app.models.user import User
+import logging
 
+logger = logging.getLogger('api')
 
 def get_all():
-    """ Get user data by username """
     try:
         sfas = current_session.query(SprintFocusArea).all()
         res = []
@@ -21,8 +23,19 @@ def get_all():
             res.append(new)
         return res
 
+
+    except NoResultFound as e:
+
+        logger.exception(e)
+
+        return {'error': 'news not found'}, 400
+
+
     except Exception as e:
-        return e
+
+        logger.exception(e)
+
+        return {'error': 'unknown'}, 400
 
 
 def post_sfa(sfa):
@@ -44,13 +57,19 @@ def post_sfa(sfa):
         }
         return new
 
+
+    except NoResultFound as e:
+        logger.exception(e)
+        return {'error': 'news not found'}, 400
+
     except Exception as e:
-        return e
+        logger.exception(e)
+        return {'error': 'unknown'}, 400
 
 
 def get_by_id(id):
     try:
-        sfa = current_session.query(SprintFocusArea).filter_by(id=id).first()
+        sfa = current_session.query(SprintFocusArea).filter_by(id=id).one()
 
         res = {
             "id": sfa.id,
@@ -61,28 +80,54 @@ def get_by_id(id):
 
         return res
 
+
+
+    except NoResultFound as e:
+
+        logger.exception(e)
+
+        return {'error': 'news not found'}, 400
+
+
     except Exception as e:
-        return e
+
+        logger.exception(e)
+
+        return {'error': 'unknown'}, 400
 
 
 def get_by_sprint(sprint):
     try:
-        sfa = current_session.query(SprintFocusArea).filter_by(sprint=sprint).all()
-        res = {
-            "id": sfa.id,
-            "sprint": sfa.sprint,
-            "title": sfa.title,
-            "description": sfa.description
-        }
+        sfas = current_session.query(SprintFocusArea).filter_by(sprint=sprint).all()
+        res = []
+        for sfa in sfas:
+            res_sfa = {
+                "id": sfa.id,
+                "sprint": sfa.sprint,
+                "title": sfa.title,
+                "description": sfa.description
+            }
+            res.append(res_sfa)
         return res
 
+
+    except NoResultFound as e:
+
+        logger.exception(e)
+
+        return {'error': 'news not found'}, 400
+
+
     except Exception as e:
-        return e
+
+        logger.exception(e)
+
+        return {'error': 'unknown'}, 400
 
 
 def update_sfa(sfa):
     try:
-        prev = current_session.query(SprintFocusArea).filter_by(id=sfa['id']).first()
+        prev = current_session.query(SprintFocusArea).filter_by(id=sfa['id']).one()
         prev.id = sfa["id"]
         prev.sprint = sfa["sprint"]
         prev.title = sfa["title"]
@@ -98,13 +143,24 @@ def update_sfa(sfa):
         }
         return res
 
+
+    except NoResultFound as e:
+
+        logger.exception(e)
+
+        return {'error': 'news not found'}, 400
+
+
     except Exception as e:
-        return e
+
+        logger.exception(e)
+
+        return {'error': 'unknown'}, 400
 
 
 def delete_sfa(id):
     try:
-        sfa = current_session.query(SprintFocusArea).filter_by(id=id).first()
+        sfa = current_session.query(SprintFocusArea).filter_by(id=id).one()
         current_session.delete(sfa)
         current_session.flush()
         current_session.commit()
@@ -116,5 +172,16 @@ def delete_sfa(id):
         }
         return res
 
+
+    except NoResultFound as e:
+
+        logger.exception(e)
+
+        return {'error': 'news not found'}, 400
+
+
     except Exception as e:
-        return e
+
+        logger.exception(e)
+
+        return {'error': 'unknown'}, 400

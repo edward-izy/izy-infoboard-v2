@@ -25,26 +25,26 @@ class SprintGet(Resource):
     @jwt_required()
     @api.expect(token_args)
     def get(self):
-        """ Get a specific user's data by their username """
+        """ Get all sprints """
         return get_all()
 
     @jwt_required()
     @api.expect(token_args, SprintDto.post_sprint)
     def post(self):
-        """ Get a specific user's data by their username """
+        """ Post new sprint """
         return post_sprint(api.payload)
 
     @jwt_required()
     @api.expect(token_args, SprintDto.update_sprint)
     def put(self):
-        """ Get a specific user's data by their username """
+        """ Update a sprint """
         return update_sprint(api.payload)
 
 
 @api.route("/by-sprint")
 class SprintGetById(Resource):
     @api.doc(
-        "Get a specific user",
+        "Get a specific user2",
         responses={
             200: ("User data successfully sent"),
             404: "User not found!",
@@ -53,14 +53,14 @@ class SprintGetById(Resource):
     @jwt_required()
     @api.expect(token_args, sprint_args)
     def get(self):
-        """ Get a specific user's data by their username """
+        """ Get sprint by ID """
         args = sprint_args.parse_args()
         return get_by_sprint(args["sprint"])
 
     @jwt_required()
     @api.expect(token_args, sprint_args)
     def delete(self):
-        """ Get a specific user's data by their username """
+        """ Delete sprint by ID """
         args = sprint_args.parse_args()
         return delete_sprint(args["sprint"])
 
