@@ -82,12 +82,12 @@ Please specify your app's environment variables in a `.env` file, otherwise Flas
 
 ```sh
 # .env file example
-export FLASK_APP=main
-export FLASK_CONFIG=development
-export USER_NAME=testModule1
-export PASSWORD=detteerentest
-# configs: production, testing, development, and default (uses DevelopmentConfig)
-export FLASK_CONFIG=development
+export FLASK_APP="main" 
+export FLASK_CONFIG="production" 
+export USER_NAME="infoboardv2-sandbox" 
+export PASSWORD="tcm-HVQ7kjx9ahx_ukg" 
+export KV_PATH="module/parameters/sandbox/infoboardv2-sandbox" 
+export PUBLIC_PATH="jwt/sandbox/public" 
 
 # Another way of assigning environment variables is:
 FLASK_APP=giya

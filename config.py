@@ -76,7 +76,7 @@ class DevelopmentConfig(Config):
 
     # Get Parameters and Credentials from VAULT
     module_parameters = client.secrets.kv.v1.read_secret(
-        path="module/parameters/testModule1",
+        path=os.getenv('KV_PATH'),
         mount_point="kv")["data"]
     database_info = client.read(module_parameters["database_credentials_path"])
     db_credentials_expiry_time = datetime.now() + timedelta(seconds=database_info["lease_duration"])
@@ -128,10 +128,10 @@ class DevelopmentConfig(Config):
     sfa_fh = logging.FileHandler("logs/sfa.log")
 
     w_log = logging.getLogger('werkzeug')
-    w_log.setLevel(logging.WARNING)
+    w_log.setLevel(logging.INFO)
     w_log.addHandler(format_handler)
 
-    logging.basicConfig(level=logging.WARNING, filename="logs/app.log", format="%(levelname)-s - %(name)-5s %(asctime)-30s line_%(lineno)-d in %(filename)-20s %(message)s")
+    logging.basicConfig(level=logging.INFO, filename="logs/app.log", format="%(levelname)-s - %(name)-5s %(asctime)-30s line_%(lineno)-d in %(filename)-20s %(message)s")
 
 
 class TestingConfig(Config):
@@ -147,7 +147,7 @@ class ProductionConfig(Config):
     DEBUG = False
     # Get Parameters and Credentials from VAULT
     module_parameters = client.secrets.kv.v1.read_secret(
-        path="module/parameters/testModule1",
+        path=os.getenv('KV_PATH'),
         mount_point="kv")["data"]
     database_info = client.read(module_parameters["database_credentials_path"])
     db_credentials_expiry_time = datetime.now() + timedelta(seconds=database_info["lease_duration"])
